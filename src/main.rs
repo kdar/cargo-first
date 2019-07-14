@@ -39,7 +39,7 @@ fn main() {
     }
 
     if errors >= 2 {
-      process::exit(0);
+      process::exit(1);
     }
 
     eprintln!("{}", line);
