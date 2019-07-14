@@ -38,10 +38,12 @@ fn main() {
       errors += 1;
     }
 
-    if errors >= 2 {
-      process::exit(1);
+    if errors <= 1 {
+      eprintln!("{}", line);
     }
+  }
 
-    eprintln!("{}", line);
+  if errors != 0 {
+    process::exit(1);
   }
 }
