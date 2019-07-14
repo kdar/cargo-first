@@ -20,7 +20,7 @@ fn main() {
 
   args.extend(env::args().skip(2));
 
-  let process = match Command::new("cargo")
+  let mut process = match Command::new("cargo")
     .args(&args)
     .stderr(Stdio::piped())
     .spawn()
@@ -31,7 +31,7 @@ fn main() {
 
   let re = regex::Regex::new(r#"^[^\s]*error.*:"#).unwrap();
 
-  let reader = BufReader::new(process.stderr.unwrap());
+  let reader = BufReader::new(process.stderr.take().unwrap());
   let mut errors = 0;
   for line in reader.lines().filter_map(|line| line.ok()) {
     if re.is_match(&line) {
@@ -43,7 +43,9 @@ fn main() {
     }
   }
 
-  if errors != 0 {
+  if let Some(code) = process.wait().unwrap().code() {
+    process::exit(code);
+  } else {
     process::exit(1);
   }
 }
