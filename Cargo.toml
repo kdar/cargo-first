@@ -3,6 +3,13 @@ name = "cargo-first"
 version = "0.1.0"
 authors = ["kdar <kevin@outroot.com>"]
 edition = "2018"
+repository = "https://github.com/kdar/cargo-first"
+homepage = "https://github.com/kdar/cargo-first"
+documentation = "https://docs.rs/cargo-first"
+description = """
+A cargo subcommand to stop execution after the first error.
+"""
+categories = ["cargo", "subcommand", "cargo-subcommand"]
 
 [dependencies]
 atty = "0.2.12"
