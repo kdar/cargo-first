@@ -10,6 +10,7 @@ description = """
 A cargo subcommand to stop execution after the first error.
 """
 categories = ["cargo", "subcommand", "cargo-subcommand"]
+license = "MIT"
 
 [dependencies]
 atty = "0.2.12"
