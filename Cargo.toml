@@ -1,6 +1,6 @@
 [package]
 name = "cargo-first"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["kdar <kevin@outroot.com>"]
 edition = "2018"
 repository = "https://github.com/kdar/cargo-first"
