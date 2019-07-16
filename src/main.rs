@@ -1,5 +1,6 @@
 use std::env;
-use std::io::{BufRead, BufReader};
+use std::io::Write;
+use std::io::{self, BufRead, BufReader};
 use std::process::{self, Command, Stdio};
 
 use atty;
@@ -29,23 +30,32 @@ fn main() {
     Err(e) => panic!("cargo {}: {}", args[0], e),
   };
 
-  let re = regex::Regex::new(r#"^[^\s]*error.*:"#).unwrap();
+  let re_error = regex::Regex::new(r#"^[^\s]*error.*:"#).unwrap();
+  let re_warning = regex::Regex::new(r#"^[^\s]*warning.*:"#).unwrap();
 
   let reader = BufReader::new(process.stderr.take().unwrap());
-  let mut errors = 0;
+
+  let mut found = false;
+  let mut count = 0;
   for line in reader.lines().filter_map(|line| line.ok()) {
-    if re.is_match(&line) {
-      errors += 1;
+    if re_error.is_match(&line) {
+      found = true;
+      count += 1;
+    } else if found && re_warning.is_match(&line) {
+      count += 1;
     }
 
-    if errors <= 1 {
+    if count <= 1 {
       eprintln!("{}", line);
+      io::stderr().flush().ok();
+    } else if found {
+      process::exit(1);
     }
   }
 
-  if let Some(code) = process.wait().unwrap().code() {
-    process::exit(code);
-  } else {
-    process::exit(1);
-  }
+  // if let Some(code) = process.wait().unwrap().code() {
+  //   process::exit(code);
+  // } else {
+  //   process::exit(1);
+  // }
 }
